@@ -1,0 +1,99 @@
+
+{% extends "_base.html" %}
+
+{% block content %}
+<section>
+  <h1>URLS</h1>
+
+  <hr><br><br>
+
+  <div class="row">
+    <div class="col">
+      <div class="header">
+        <h2>LIST OF URLS</h2>
+      </div>
+      <button class="btn btn-primary" id="getUrls">Refresh</button>
+      <p><ul id="urlList"></ul></p>
+    </div>
+
+    <div class="col">
+      <div class="header">
+        <h2>CREATE AND CHECK</h2>
+      </div>
+      <form id="addUrlForm">
+        <div class="mb-3">
+          <label for="urlTaskPost">Url</label>
+          <input type="text" class="form-control" id="urlTaskPost" placeholder="Url" required>
+        </div>
+        <button type="submit" class="btn btn-success">Create</button>
+      </form>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col">
+      <div class="header">
+        <h2>CHECK</h2>
+      </div>
+      <form id="updateUrlForm">
+        <div class="mb-3">
+          <label for="urlIdPut">ID</label>
+          <input type="number" class="form-control" id="urlIdPut" placeholder="Url ID">
+        </div>
+        <button type="submit" class="btn btn-warning">Check</button>
+      </form>
+    </div>
+
+
+{% endblock content %}
+
+{% block javascript %}
+<script>
+
+  // fetch api examples
+  (function() {
+
+    console.log("ready!");
+
+    const allUrl = "{% url 'urls' %}";
+
+     // GET
+    const readButton = document.getElementById("getUrls");
+    readButton.addEventListener("click", () => {
+      getAllUrls(allUrl);
+    });
+
+    // POST
+    const addURLForm = document.getElementById("addUrlForm");
+
+    addURLForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const formData = {
+        task: addURLForm.elements["urlTaskPost"].value,
+
+      }
+      addUrl(allUrl, formData);
+      addURLForm.reset();
+    });
+
+    // PUT
+    const updateUrlForm = document.getElementById("updateUrlForm");
+    updateUrlForm.addEventListener("submit", (e) => {
+      // prevent page reload
+      e.preventDefault();
+      // get the values from the form fields
+
+      const urlId = updateUrlForm.elements["urlIdPut"].value;
+      const singleUrl = "{% url 'urls' %}" +`${urlId}/` ;
+      updateUrl(singleUrl);
+      updateUrlForm.reset();
+    });
+
+
+  })();
+
+</script>
+{% endblock %}
